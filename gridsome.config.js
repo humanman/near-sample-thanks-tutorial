@@ -16,8 +16,8 @@ function addStyleResource (rule) {
 }
 
 module.exports = {
-  siteName: 'SampleThanks',
-  siteUrl: 'https://jamdocs.samuelhorn.com',
+  siteName: 'Mezze',
+  siteUrl: 'https://github.com/humnaman/near-sample-thanks-tutorial',
   templates: {
     Tutorial: '/:slug',
   },
