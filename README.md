@@ -1,6 +1,10 @@
 # ![NEAR](https://github.com/humanman/near-sample-thanks-tutorial/blob/master/src/assets/img/logo_near_bright.svg)
 
-This is my base application for creating rich tutorials focused on blockchain development. Currently, I am working on a tutorial for writing Smart Contracts on the NEAR protocol. Once completed, I will start a growing list of tutorial microsites built with this theme. I hope to see you back!
+This is my base application for creating rich tutorials focused on blockchain development. 
+
+Currently, I am working on a tutorial for writing Smart Contracts on the NEAR protocol. Once completed, I will start a growing list of tutorial microsites built with this theme. 
+
+I hope to see you back!
 ## Local installation for development
 
 1. `$ git clone https://github.com/humanman/near-sample-thanks-tutorial project-name`.
