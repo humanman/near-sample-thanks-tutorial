@@ -1,11 +1,13 @@
 <template>
-  <div class="site">
-    <Header :menuToggle="sidebar" />
-    <Sidebar v-if="sidebar" />
-    <main class="main" :class="{'main--no-sidebar': !sidebar, 'main--sidebar-is-open' : this.$store.state.sidebarOpen}">
-      <slot/>
-    </main>
-  </div>
+  <v-app>
+    <div class="site">
+      <Header :menuToggle="sidebar" />
+      <Sidebar v-if="sidebar" />
+      <main class="main" :class="{'main--no-sidebar': !sidebar, 'main--sidebar-is-open' : this.$store.state.sidebarOpen}">
+        <slot/>
+      </main>
+    </div>
+  </v-app>
 </template>
 
 <static-query>
@@ -75,4 +77,5 @@ export default {
     transform: translate(300px);
   }
 }
+
 </style>

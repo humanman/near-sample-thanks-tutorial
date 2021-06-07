@@ -3,7 +3,7 @@
     <h1>
       {{ $page.tutorial.title }}
     </h1>
-    <div class="markdown" v-html="$page.tutorial.content" />
+    <VueRemarkContent />
   </Layout>
 </template>
 
@@ -12,8 +12,7 @@
     tutorial: tutorial (path: $path) {
       title
       path
-      # date (format: "D. MMMM YYYY")
-      timeToRead
+      slug
       content
     }
   }
@@ -43,8 +42,10 @@ export default {
 }
 
 /deep/ > h2 {
-  padding-top: 100px;
-  margin-top: -80px;
+  // padding-top: 100px;
+  // margin-top: -80px;
+  margin-top: 5rem;
+  margin-bottom: 1.5rem;
 
   @include respond-above(md) {
     font-size: 2rem;
@@ -58,4 +59,5 @@ export default {
 .markdown {
   padding-bottom: 50vh;
 }
+
 </style>

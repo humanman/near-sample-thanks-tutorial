@@ -56,6 +56,17 @@ pre[class*="language-"] {
 	cursor: help;
 }
 
+pre[class*="language-"] {
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+:not(pre) > code[class*="language-"],
+span.code-emphasis.inline-block {
+  border-radius: 5px;
+  padding: .25rem .4rem;
+}
+
 .bright {
   code[class*="language-"],
   pre[class*="language-"] {
@@ -63,8 +74,14 @@ pre[class*="language-"] {
   }
 
   :not(pre) > code[class*="language-"],
-  pre[class*="language-"] {
+  pre[class*="language-"],
+  span.code-emphasis.inline-block {
     background: $sidebarBright;
+  }
+
+  :not(pre) > code[class*="language-text"], 
+  span.code-emphasis {
+    color: $textInlineCodeBright;
   }
 
   .token.punctuation {
@@ -114,6 +131,11 @@ pre[class*="language-"] {
   .token.variable {
     color: #e90;
   }
+
+  // .demo-form {
+
+  // }
+
 }
 
 .dark {
@@ -123,8 +145,14 @@ pre[class*="language-"] {
   }
 
   :not(pre) > code[class*="language-"],
-  pre[class*="language-"] {
+  pre[class*="language-"],
+  span.code-emphasis.inline-block {
     background: $sidebarDark;
+  }
+
+  :not(pre) > code[class*="language-text"], 
+  span.code-emphasis {
+    color: $textInlineCodeDark;
   }
 
   .token.punctuation {

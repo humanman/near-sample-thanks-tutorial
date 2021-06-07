@@ -37,7 +37,7 @@ export default {
     return {
       title: this.description,
       meta: [
-        { key: 'description', name: 'description', content: 'A theme for static site documentation based on Gridsome, ready to deploy to Netlify in one click.' }
+        { key: 'description', name: 'description', content: 'A mezze of knowledge for tech enthusiasts.' }
       ]
     }
   }
@@ -83,4 +83,5 @@ export default {
       margin: 5em 0 0;
     }
   }
+
 </style>

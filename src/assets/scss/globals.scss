@@ -55,3 +55,11 @@ h1 {
 a {
   color: $brandPrimary;
 }
+
+.tip {
+  border-radius: 5px;
+  padding: .75rem;
+  color: #222;
+  border-left: 8px solid #ebe750;
+  background-color: #f9f8d0;
+}

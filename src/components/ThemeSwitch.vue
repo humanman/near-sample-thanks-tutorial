@@ -29,11 +29,13 @@ export default {
 
       if (process.isClient && localStorage.getItem('theme') === null) {
         localStorage.setItem('theme', 'bright')
+        this.$vuetify.theme.dark = false
         self.theme = 'bright'
       } 
       if (process.isClient) {
         body.classList.add(localStorage.getItem('theme'))
         self.theme = localStorage.getItem('theme')
+        self.them == 'bright' ? this.$vuetify.theme.dark = false : this.$vuetify.theme.dark = true
       }
     },
     toggleTheme: function() {
@@ -42,12 +44,14 @@ export default {
 
       if (process.isClient) {
         if (body.classList.contains('dark')) {
+          this.$vuetify.theme.dark = false
           localStorage.setItem('theme', 'bright');
           body.classList.remove('dark')
           body.classList.add('bright')
           self.theme = 'bright'
         } else {
           localStorage.setItem('theme', 'dark');
+          this.$vuetify.theme.dark = true
           body.classList.remove('bright')
           body.classList.add('dark')
           self.theme = 'dark'

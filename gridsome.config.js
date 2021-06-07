@@ -14,26 +14,36 @@ function addStyleResource (rule) {
       ],
     })
 }
-
+const siteName = 'Mezze-Tech'
 module.exports = {
-  siteName: 'Mezze',
+  siteName: siteName,
   siteUrl: 'https://github.com/humnaman/near-sample-thanks-tutorial',
-  templates: {
-    Tutorial: '/:slug',
-  },
+  titleTemplate: `${siteName} - %s`,
+  // templates: {
+  //   Tutorial: '/:slug',
+  // },
   plugins: [
     {
-      use: '@gridsome/source-filesystem',
+      use: '@gridsome/vue-remark',
       options: {
-        path: 'tutorials/**/*.md',
+        baseDir: './tutorials/',
+        route: '/:slug',
         typeName: 'Tutorial',
-        remark: {
-          plugins: [
-            '@gridsome/remark-prismjs'
-          ],
-          
-        }
+        template: './src/templates/Tutorial.vue',
+        includePaths: ['~/src/components'],
+        plugins: ['@gridsome/remark-prismjs'],
       }
+      // use: '@gridsome/source-filesystem',
+      // options: {
+      //   path: 'tutorials/**/*.md',
+      //   typeName: 'Tutorial',
+      //   remark: {
+      //     plugins: [
+      //       '@gridsome/remark-prismjs'
+      //     ],
+          
+      //   }
+      // }
     },
     {
       use: '@gridsome/plugin-google-analytics',
