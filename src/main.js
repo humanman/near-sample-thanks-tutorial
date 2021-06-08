@@ -11,6 +11,10 @@ import Vuetify from 'vuetify'
 import "vuetify/dist/vuetify.min.css"
 import Vuex from 'vuex'
 import ContractForm from '~/components/contract-ui/ContractForm.vue'
+import Highlightable from '~/components/Highlightable.vue'
+import Vssue from 'vssue'
+import GithubV3 from '@vssue/api-github-v3'
+import 'vssue/dist/vssue.css'
 
 require('typeface-source-sans-pro')
 
@@ -18,6 +22,15 @@ config.autoAddCss = false;
 library.add(faGithub, faTwitter)
 
 export default function (Vue, { router, head, isClient, appOptions }) {
+
+  Vue.use(Vssue, {
+    api: GithubV3,
+    owner: process.env.REPO_OWNER,
+    repo: process.env.REPO_NAME,
+    clientId: process.env.VSSUE_CLIENT_ID,
+    clientSecret: process.env.VSSUE_CLIENT_SECRET,
+  })
+
   Vue.use(Vuetify);
 
   Vue.use(Vuex)
@@ -27,7 +40,13 @@ export default function (Vue, { router, head, isClient, appOptions }) {
 
   // Add iconography plugin
   Vue.component('font-awesome', FontAwesomeIcon)
+
+  // Add contract demo
   Vue.component('contract-form', ContractForm)
+  
+  // Add Medium Style Select Text to Comment Functionality
+  Vue.component('highlightable', Highlightable)
+
 
   // Add attributes to HTML tag
   head.htmlAttrs = { lang: 'en' }

@@ -1,5 +1,5 @@
 ---
-title: Sample Thanks
+title: Thanks
 slug: thanks
 ---
 ## Overview
@@ -10,7 +10,7 @@ You can optionally attach tokens to your message, or even leave an anonymous tip
 
 Of course keep in mind that your signing account will be visible on the blockchain via NEAR Explorer even if you send an anonymous message.
 
-This is a simple demonstration of how smart contracts work, and how they can be used to call other smart contracts.
+This is a simple demonstration of how smart contracts work, and how to call them.
 
 We are going to use a mixture of functions and classes, then we will refactor everything into classes. Initially, the classes you will see basically allow us to organize data as if it was wrapped in an object literal. _TypeScript_ and _AssemblyScript_ are soooo hyper aware of how you organize your data structures, and they start to turn rabid if you want to simply assign an object to a variable:
 
@@ -64,7 +64,13 @@ $ yarn
 $ gridsome develop
 ```
 
-Alternatively, you can build everything from scratch using the terminal command `npx create-near-app your-awesome-project`, and just use the following file tree for reference
+Alternatively, you can build everything from scratch using the terminal command:
+
+<pre class="language-bash">
+$ <span class="token function">near</span> create-near-app your-awesome-project
+</pre>
+
+and just use the following file tree for reference.
 
 Otherwise, let's get started!
 
@@ -305,7 +311,7 @@ Let's look at some of the property methods in there. `Context` is being used, an
 
 Next, we see property methods like `update` and `pushBack`. With `update`, we definitely know we are mutating state somehow, which means it's a _call_ function. The same goes with `pushBack`, which is a method on `Vector`, which in turn extends the class, `PersistentVector`, a _storage_ collection you will often find being used in NEAR contracts to persist data. You can read all about data storage collections in the [NEAR docs](https://docs.near.org/docs/concepts/data-storage).
 
-## Call Function
+## Calling Function
 
 Notice we are exporting `say`. If we don't export our contract functions then NEAR will throw a `MethodNotFound` error when we try to call them. 
 
@@ -376,7 +382,7 @@ The next thing we want to do is add the rest of our methods. We have a `list` me
 
 Remember, any function we export in `assembly/index.ts` will be interpreted as a contract function when compiled to a `wasm`, and we can call it just like we did with `say`. It is perfectly fine to write your contracts this way, but did you see how clean some of those helper classes were? The simplicity and elegance of `Message` is quite inspired. Wouldn't if be cool to have a class for our contract so we can be hip to the singleton style all the kids are doing these days?  The answer is, Yes. Yes it would.
 
-## Refactoring into Classes
+## Refactoring
 
 
 Refactoring contract functions into a singleton pattern isn't that hard, but there are a few things to keep in mind. AssemblyScript requires the `@nearBindgen` decorator on every class you write. Furthermore, every _call_ function requires its own decorator, `@mutateState()` on the line above it. 
@@ -443,7 +449,7 @@ assert(message.length > 0, "Message length cannot be 0")
 
 I love `assert`. It's so intuitive, and simply allows you to place guards with error messages wherever you want. It saves your lines of `if/else` statements to do the same job, and it seamlessly ties in to your unit tests. If you're not already using it, start today!
 
-## Unit Testing
+## Testing
 
 Speaking of unit tests, let's write a few, and I encourage you to write some more. Use the `assert` methods as clues for what to write.
 
@@ -517,7 +523,7 @@ Unit tests will save you loads of debugging time, and help you handle edge cases
 
 You may run into some weird issues in the terminal. Make sure you haven't added any unnecessary dependencies. Also, you may have been tempted to run `npm audit fix` at some point during installation. Despite all the bright red, urgent warnings your terminal may have thrown at you, "fixing" the dependencies may prevent you from properly compiling your code, which will in turn prevent pretty much anything else you want to do with your program. Bleeding edge technology like blockchain development is a bit of a double edge sword. It's exciting, and there's lots of opportunity to contribute, but the source code is constantly updating and improving. What was stable last week, may be outdated this week.
 
-## Bash Scripts
+## Adding Scripts
 
 Let's make our lives a bit easier and gather our CLI commands.
 
@@ -526,24 +532,46 @@ Switch to the `scripts/step-03` branch, and review the contents of the `scripts`
 Take a few minutes to read through `scripts/README.md`. It will lay out a cool demonstration of the contract at work using the terminal. Here is a video of that demonstration:
 
 
-<!-- <video>
-  <source src="https://cdn.loom.com/sessions/thumbnails/13269fbf5c8c463d9955bc5ef0051387-00001.mp4">
-</video> -->
+<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/13269fbf5c8c463d9955bc5ef0051387" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
 
-## Front End: Vue
+## Summary
 
-We've built and tested a remarkable backend. If we were building an API, the smart contracts would be our methods to make requests to our api. More specifically, smart contracts operate like an ORM, but instead of communicating directly with a database (ORM), smart contracts communicate directly with the blockchain or, rather, the blockchain's own api called RPC. 
+Amazing work! Hopefully, you know a little bit more about Smart Contracts like:
+
+<ul>
+  <li>The difference between a _call_ function and a _view_ function</li>
+  <li>Dependencies and libraries specific to NEAR and _AssemblyScript_</li>
+  <li>Setting up an account Id for your contract</li>
+  <li>Calling a contract method from the command line</li>
+  <li>Writing Smart Contracts as functions and as Classes</li>
+  <li>Unit testing your Smart Contract</li>
+  <li>Using scripts to run code</li>
+</ul>
+<br/>
+You also have some new packages installed globally that you can use like NEAR CLI. Now you can write your own Smart Contracts, deploy them, and call them; all from the command line. 
+
+
+
+
+## What Next?
+
+<strong class="mt-8 mb-4 d-block">Simulation Testing</strong>
+
+If you want to dive deeper into testing, head over to the [Near Docs](https://docs.near.org/docs/develop/contracts/rust/testing-rust-contracts#simulation-tests), and look into Simulation Tests. Although, we wrote our contract code in _AssemblyScript_, all Simulation Tests are written in _Rust_, which can be a very challenging language to learn, but well worth it if you continue developing Smart Contracts. 
+
+<strong class="mt-8 mb-4 d-block">Adding a Front End</strong>
+
+We've built and tested a remarkable backend. If we were building an API, the smart contracts would be our methods to make requests to our api. More specifically, smart contracts operate like an ORM, but instead of communicating directly with a database (ORM), smart contracts communicate directly with the blockchain or, rather, the blockchain's own api called RPC.
 
 If that's confusing, then let's back up a bit - we're done building our backend.
 
 But can Grandma open up her terminal and use it? No. Grandma thinks Bash is some sort of breakfast side dish. In order for her to send us a message (and maybe a NEAR token or two), we need to spin up a front end that calls the contract the same way we've been doing in the terminal.  
 
-Take a moment to think about what this contract would look like. What would _any_ "thank you message" application _look_ like? We know that `say` requires a _message_ and a _accountId_, right?
+Take a moment to think about what this contract would look like. What would _any_ "thank you message" application _look_ like? We know that `say` requires a _message_ and a _accountId_, right? Maybe a form of some kind?
 
 <contract-form></contract-form>
 
-
-Switch to the `frontend/step-04` branch. You should see quite a few more folders in your project directory. 
+Switch to the `frontend/bonus` to see the code for the above form. Running `yarn dev` will now open a web page with the form. Dive into the code to see how it's all wired up. Have fun! 
 
 
 

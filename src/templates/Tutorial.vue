@@ -1,9 +1,12 @@
 <template>
+
   <Layout>
     <h1>
       {{ $page.tutorial.title }}
     </h1>
-    <VueRemarkContent />
+    <div ref="content">
+      <VueRemarkContent/>
+    </div>
   </Layout>
 </template>
 
@@ -16,10 +19,14 @@
       content
     }
   }
-</page-query>
+</page-query> 
 
 <script>
 export default {
+  mounted () {
+    const width = this.$refs.content.clientWidth
+    this.$emit('width', width)
+  },
   metaInfo() {
     return {
       title: this.$page.tutorial.title,

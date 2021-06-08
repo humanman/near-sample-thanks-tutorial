@@ -4,7 +4,12 @@
       <Header :menuToggle="sidebar" />
       <Sidebar v-if="sidebar" />
       <main class="main" :class="{'main--no-sidebar': !sidebar, 'main--sidebar-is-open' : this.$store.state.sidebarOpen}">
-        <slot/>
+        <highlightable
+          @share="onShare"
+          @highlight="onHighlight"
+        >
+          <slot/>
+        </highlightable>
       </main>
     </div>
   </v-app>
@@ -23,6 +28,15 @@ import Header from '~/components/Header.vue'
 import Sidebar from '~/components/Sidebar.vue'
 
 export default {
+  methods: {
+    onShare (text) {
+      console.log('share:', text)
+    },
+
+    onHighlight (text) {
+      console.log('highlight:', text)
+    }
+  },
   components: {
     Header,
     Sidebar
