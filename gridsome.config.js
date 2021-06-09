@@ -19,9 +19,6 @@ module.exports = {
   siteName: siteName,
   siteUrl: 'https://github.com/humnaman/near-sample-thanks-tutorial',
   titleTemplate: `${siteName} - %s`,
-  // templates: {
-  //   Tutorial: '/:slug',
-  // },
   plugins: [
     {
       use: '@gridsome/vue-remark',
@@ -33,17 +30,6 @@ module.exports = {
         includePaths: ['~/src/components'],
         plugins: ['@gridsome/remark-prismjs'],
       }
-      // use: '@gridsome/source-filesystem',
-      // options: {
-      //   path: 'tutorials/**/*.md',
-      //   typeName: 'Tutorial',
-      //   remark: {
-      //     plugins: [
-      //       '@gridsome/remark-prismjs'
-      //     ],
-          
-      //   }
-      // }
     },
     {
       use: '@gridsome/plugin-google-analytics',

@@ -23,10 +23,6 @@
 
 <script>
 export default {
-  mounted () {
-    const width = this.$refs.content.clientWidth
-    this.$emit('width', width)
-  },
   metaInfo() {
     return {
       title: this.$page.tutorial.title,
@@ -49,13 +45,20 @@ export default {
 }
 
 /deep/ > h2 {
-  // padding-top: 100px;
-  // margin-top: -80px;
   margin-top: 5rem;
   margin-bottom: 1.5rem;
 
   @include respond-above(md) {
     font-size: 2rem;
+  }
+}
+
+/deep/ > h3 {
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+
+  @include respond-above(md) {
+    font-size: 1.5rem;
   }
 }
 

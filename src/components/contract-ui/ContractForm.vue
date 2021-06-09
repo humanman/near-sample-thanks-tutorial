@@ -1,5 +1,6 @@
 <template>
   <v-card class="pa-6 mb-4">
+    <v-btn class="me-2 mb-6" elevation="3" @click="nearLogin">Login to Call Contract</v-btn>
     <h3 class="text-center">Thanks - Smart Contract</h3>
     <v-form ref="form" class="demo-form mt-4" v-model="valid" lazy-validation>
       <v-container class="mt-6 mb-14 d-flex pa-2 flex-column">
@@ -60,8 +61,16 @@
 
 
 <script>
+  import initContract from './near-connect.js'
+
   export default {
     data: () => ({
+      near: {
+        contract: null,
+        currentUser: null,
+        config: null,
+        wallet: null
+      },
       valid: true,
       contractName: '',
       contractNameRules: [
@@ -83,15 +92,41 @@
       isVisible() {
         return this.isAnon
       }
-    }, 
+    },
+    created() {
+      window.nearInitPromise = initContract()
+        .then(({ contract, currentUser, nearConfig, walletConnection }) => {
+          this.near.contract = contract
+          this.near.currentUser = currentUser
+          this.near.config = nearConfig
+          this.near.wallet = walletConnection
+          this.contractName = this.near.config.contractName
+          this.senderName = this.near.currentUser.accountId
+      })
+    },
     methods: {
+      nearLogin() {
+        this.near.wallet.requestSignIn(
+          this.near.config.contractName,
+          'Thanks'
+        );
+
+      },
       clear () {
         this.$refs.form.reset()
       },
       submitForm () {
         this.$refs.form.validate()
         const isValid = this.$refs.form.validate()
-        if (isValid) console.log(isValid)
+        if (isValid) {
+          this.near.contract.say({
+            message: this.message,
+            anonymous: (this.isAnon ? true: false)
+          },
+          300000000000000,
+          this.donation
+          )
+        }
 
       },
     }

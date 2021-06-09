@@ -6,6 +6,7 @@ import '~/assets/scss/globals.scss'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { config, library } from '@fortawesome/fontawesome-svg-core'
 import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faLightbulb, faQuoteLeft, faQuoteRight } from '@fortawesome/free-solid-svg-icons'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import Vuetify from 'vuetify'
 import "vuetify/dist/vuetify.min.css"
@@ -23,29 +24,44 @@ library.add(faGithub, faTwitter)
 
 export default function (Vue, { router, head, isClient, appOptions }) {
 
-  Vue.use(Vssue, {
-    api: GithubV3,
-    owner: process.env.REPO_OWNER,
-    repo: process.env.REPO_NAME,
-    clientId: process.env.VSSUE_CLIENT_ID,
-    clientSecret: process.env.VSSUE_CLIENT_SECRET,
-  })
-
+  // Add iconography plugin
+  library.add(faLightbulb, faQuoteLeft, faQuoteRight)
+  Vue.component('fa-icon', FontAwesomeIcon)
+  
+  // out-of-the-box slick layouts plus material design classes
   Vue.use(Vuetify);
 
+  // not actually sure if needed
   Vue.use(Vuex)
 
   // Set default layout as a global component
   Vue.component('Layout', DefaultLayout)
 
-  // Add iconography plugin
-  Vue.component('font-awesome', FontAwesomeIcon)
 
   // Add contract demo
   Vue.component('contract-form', ContractForm)
   
   // Add Medium Style Select Text to Comment Functionality
   Vue.component('highlightable', Highlightable)
+
+  // allows users to comment via GH issues on any text they select
+  Vue.use(Vssue, {
+    api: GithubV3,
+    owner: process.env.GRIDSOME_REPO_OWNER,
+    repo: process.env.GRIDSOME_REPO_NAME,
+    clientId: process.env.GRIDSOME_VSSUE_CLIENT_ID,
+    clientSecret: process.env.GRIDSOME_VSSUE_CLIENT_SECRET
+  })
+
+  // // allows users to comment via GH issues on any text they select
+  // Vue.use(VueNear, {
+  //   // Needs the environment for the correct RPC to use
+  //   env: 'development',
+  //   config: {
+  //     appTitle: 'Thanks',
+  //     contractName: 'thanks.humanman.testnet',
+  //   },
+  // })
 
 
   // Add attributes to HTML tag
@@ -79,6 +95,11 @@ export default function (Vue, { router, head, isClient, appOptions }) {
   head.meta.push({
     name: 'apple-mobile-web-app-status-bar-style',
     content: 'default'
+  })
+
+  // NEAR API 
+  head.script.push({
+    src: "https://cdn.jsdelivr.net/gh/nearprotocol/near-api-js/dist/near-api-js.js"
   })
   
   //UI

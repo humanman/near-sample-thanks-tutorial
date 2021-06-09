@@ -56,10 +56,35 @@ a {
   color: $brandPrimary;
 }
 
+.markdown {
+  p {
+    @apply mr-2;
+  }
+}
+
 .tip {
   border-radius: 5px;
   padding: .75rem;
   color: #222;
   border-left: 8px solid #ebe750;
   background-color: #f9f8d0;
+}
+
+.vssue {
+  position: absolute;
+  top: 50vh;
+  left: 50vw;
+  max-width: 90%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 10px;
+  padding: 27px;
+  z-index: 2;
+}
+
+@media screen and (min-width: 650px) {
+  .vssue {
+    max-width: 50%;
+  }
 }
