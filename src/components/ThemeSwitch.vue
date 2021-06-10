@@ -35,7 +35,7 @@ export default {
       if (process.isClient) {
         body.classList.add(localStorage.getItem('theme'))
         self.theme = localStorage.getItem('theme')
-        self.them == 'bright' ? this.$vuetify.theme.dark = false : this.$vuetify.theme.dark = true
+        self.theme == 'bright' ? this.$vuetify.theme.dark = false : this.$vuetify.theme.dark = true
       }
     },
     toggleTheme: function() {

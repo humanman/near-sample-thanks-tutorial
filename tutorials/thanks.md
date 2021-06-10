@@ -20,11 +20,11 @@ slug: thanks
 
 No. Seriously. Thanks! 
 
-Actually, that's the name of the Smart Contract we will be building today, [Thanks](https://github.com/Learn-NEAR/sample--thanks), which allows users to say "thanks" to other users by calling _their_ instance of this contract. (I would think "Thank You Note" might be a bit more semantic, but we aren't hear to judge; just to code. At the very least, it's a conversation starter.)
+Actually, that's the name of the Smart Contract we will be building today, [Thanks](https://github.com/Learn-NEAR/sample--thanks), which allows users to say "thanks" to other users by calling _their_ instance of this contract. 
 
-You can optionally attach tokens to your message, or even leave an anonymous tip.
+You can optionally attach tokens to your message, or even leave your message anonymously.
 
-Of course keep in mind that your signing account will be visible on the blockchain via NEAR Explorer even if you send an anonymous message.
+Of course keep in mind that your signing account will be visible on the blockchain via NEAR Explorer even if you send an anonymous message; It just will be omitted when the receiver calls certain _other_ functions on the contract. 
 
 This is a simple demonstration of how smart contracts work, and how to call them.
 
@@ -58,17 +58,18 @@ Instead you must create a named class and assign it as the type you are using wh
 
 Throughout this tutorial, you will have the opportunity to engage with this contract as we build it together. 
 
-At first, our calls to the contract will be through a command line interface like _Bash_ or _Terminal_.
+Our calls to the contract will be through a command line interface like _Bash_ or _Terminal_.
 
-Once our contracts have been tested and deployed, we will move away from the command line, and add a UI layer on top of our program to provide a richer user experience.
+However, if you desire to add a UI layer on top of this Smart Contract, you can see how that might work by navigation to the <a href="what-next">What Next?</a> section of this tutorial. The code for the UI below can be found in this tutorial's repo in 
+`components/contract-ui/`. You can find more examples of Smart Contracts with UIs at [examples.near.org](https://examples.near.org/)
 
-By the end of this tutorial, you will have a deeper understanding of how NEAR smart contracts are built, tested, deployed, and used. With that knowledge, you will be able to build your own decentralized applications, which you can share with the NEAR community.
+By the end of this tutorial, you will have a deeper understanding of how NEAR smart contracts are built, tested, deployed, and used. With that knowledge, you will be able to build your own decentralized applications, which you can share with the NEAR community!
 
 
 ## Local Setup
 
 
-There is a repo of this project with several branches. The first branch, _getting-started_, is the bare bones project. It will have all of the files we need, but most of them will be empty. The others you will find are:
+There is a repo of this project with several branches. The first branch, `getting-started`, is the bare bones project. It will have all of the files we need, but most of them will be empty. The others you will find are:
 
 1. `getting-started`
 2. `functions/empty` & `functions/solution`
@@ -76,16 +77,12 @@ There is a repo of this project with several branches. The first branch, _gettin
 4. `testing/empty` & `testing/solution`
 5. `scripts/empty` & `scripts/solution`
 
+<br/>
+
 Do you see a pattern? The idea here is that each major section in this tutorial has a corresponding branch of the `sample--thanks` repo. We will be working with the `/solution` branches, and review the code in there, but you are always encouraged to use the `/empty` branches to build some of this logic on your own. 
 
 
-Both `main` and `scripts/solution` will have the complete code. YOu
-
-```bash
-$ git clone git clone git@github.com:humanman/sample--thanks.git project-name
-$ cd project-name
-# run scripts in package.json with "yarn <script name>" or "npm run <script name>"
-```
+Both `main` and `scripts/solution` will have the complete code. 
 
 Alternatively, you can build everything from scratch using the terminal command:
 
@@ -102,7 +99,9 @@ Otherwise, let's get started!
 Clone the repository below or run this command:
 
 ```bash
-$ git clone git@github.com:humanman/sample--thanks.git
+$ git clone git clone git@github.com:humanman/sample--thanks.git project-name
+$ cd project-name
+# run scripts in package.json with "yarn <script name>" or "npm run <script name>"
 ```
 
 >  <div class="tip"> <fa-icon class="mr-2" style="opacity: .7;" icon="lightbulb" size="sm"></fa-icon>If you're like me, and need a visual for what this Contract might look like with a UI, scroll down to the <a href="#what-next">What Next?</a> section to see a demo of Thanks with a simple UI layer. Code is in the repo of this tutorial in the 
@@ -114,7 +113,6 @@ Now switch to the `getting-started` branch.
 
 
 <h3>File Structure</h3>
-
 
 ```
 sample--thanks/
@@ -167,13 +165,13 @@ import { Context, ContractPromiseBatch, logging, u128, PersistentVector } from "
 
 Let's review what we are importing from `near-sdk-core`:
 
-Context: _Provides context for contract execution, including information about transaction sender, etc._
+- Context: _Provides context for contract execution, including information about transaction sender, etc._
 
-ContractPromiseBatch: _Batches ContractPromise, which make asynchronous calls to other contracts and receives callbacks._
+-  ContractPromiseBatch: _Batches ContractPromise, which make asynchronous calls to other contracts and receives callbacks._
 
-logging: _Logs a string message._
+-  logging: _Logs a string message._
 
-u128: _unsigned 128-bit integer type_ 
+-  u128: _unsigned 128-bit integer type_ 
 
 Next, let's add some constants and type declarations to `index.ts`:
 
@@ -224,7 +222,7 @@ const MIN_ACCOUNT_BALANCE: u128 = u128.mul(ONE_NEAR, u128.from(3));
 
 // max 5 NEAR accepted to this contract before it forces a transfer to the owner
 const CONTRIBUTION_SAFETY_LIMIT: u128 = u128.mul(ONE_NEAR, u128.from(5));
-const owner = AccountId
+const owner: AccountId = 'YOUR_OWN_TESTNET_ACCOUNT'
 const contributions: ContributionTracker = new ContributionTracker()
 const messages: Vector<Message> = new Vector<Message>("m")
 
@@ -298,7 +296,7 @@ Hopefully, the comments in the code above will give you some clues as to what ea
 
 As for our constants, we mostly define budgetary restrictions, e.g,`CONTRIBUTION_SAFETY_LIMIT` sets the max value accepted to 5 NEAR.
 
-You'll also notice several classes defined as well: `ContributionTracker`, `Message`, and `Vector`. These classes basically give some of our variables turbo power. We will dive deeper into some of them, but the important part to note for now is that each class you write in _AssemblyScript_ intended for NEAR to understand will require a decorator. That's what `@nearBindgen` (pronounced Near `Bind Gen) is. It marks the class as serializable. Serializable is a marker interface used to “mark” classes so that the objects of these classes may get a certain capability.
+You'll also notice several classes defined: `ContributionTracker`, `Message`, and `Vector`. These classes basically give some of our variables turbo power. We will dive deeper into some of them, but the important part to note for now is that each class you write in _AssemblyScript_ intended for NEAR to understand will require a decorator. That's what `@nearBindgen` (pronounced Near `Bind Gen) is. It marks the class as serializable. Serializable is a marker interface used to “mark” classes so that the objects of these classes may get a certain capability.
 
 Let's put this code to work. Paste the following code into `index.ts`:
 
@@ -353,7 +351,7 @@ Open terminal, navigate to your project directory, and run the following command
 $ yarn build:release
 ```
 
-If you see and error, run `$ yarn` to make sure the project's dependencies have been installed locally.
+If you see an error, run `$ yarn` to make sure the project's dependencies have been installed locally.
 
 Otherwise, you should see a new folder in your root directory called `build`. This contains a `wasm` file called `thanks.wasm`, which is how _AssemblyScript_ compiles all your code into a _WebAssembly_ binary format that is run in web browsers. It's unreadable, but you can create a readable `wat` file if you want to nerd out.  Learn more about [_WebAssembly_](https://webassembly.org/) and _AssemblyScript_'s [ asbuild](https://github.com/AssemblyScript/asbuild) CLI.
 
@@ -362,6 +360,8 @@ Now that we have our code compiled, we can use the NEAR CLI to deploy it.
 <pre class="language-bash">
   $ <span class="token function">near</span> dev-deploy ./build/release/thanks.wasm
 </pre>
+
+Note: if you do not specify the `./build/release/thanks.wasm` path in the above command, NEAR defaults to checking for `out/main.wasm` 
 
 You should see another newly generated folder called `neardev`. This is a really cool feature of NEAR, where you can quickly create and use a _testnet_ account for your contract.  
 
@@ -376,7 +376,7 @@ You should see another newly generated folder called `neardev`. This is a really
   Done deploying to dev-1622755101091-2932922
 </pre>
 
-The account for the contract above, `dev-1622755101091-2932922`. It's a bit confusing at first, but your contract is seen by NEAR as just another account; no different than your own _testnet_ account, except that this account has methods you can call on it. So let's call it! 
+The account for the contract above is `dev-1622755101091-2932922`. It's a bit confusing at first, but your contract is seen by NEAR as just another account; no different than your own _testnet_ account, except that this account has methods you can call on it. So let's call it! 
 
 <pre class="language-bash">
   $ <span class="token function">near</span> call dev-1622755101091-2932922 say '{"message":"Hello "}' --accountId YOUR_OWN_TESTNET_ACCOUNT.testnet
@@ -404,24 +404,69 @@ You should see something like this in your terminal:
   <span class="token function">true</span> 
 </pre>
 
-Our call function, `say`, returns true just like it's supposed to. You can follow the link your terminal generates to view the transaction in the _testnet_ explorer. However, we pretty much just called our own contract, and sent a message to ourselves. This might work for daily affirmations, but the point of this contract is to call _other_ contracts. We'll get to that soon, but it won't look that different. 
+Our call function, `say`, returns true just like it's supposed to. You can follow the link your terminal generates to view the transaction in the _testnet_ explorer. However, we pretty much just called our own contract, and sent a message to ourselves. This might work for daily affirmations, but the point of this contract is to call _other_ contracts, but that is simply a case of knowing the contract name of the other person's `accountId` they gave to _their_ copy of _Thanks_. In fact, you can call _my_ copy of this contract I'm using in the demo at the end of this tutorial using  `thanks.humanman.testnet`:
 
-If you ran the call command from earlier as it is (with your own testnet account as `accountId`) then I would get a lovely "Hello" message, and the contract would be working as intended. Does that make sense? Contracts have their own accountIds. People have their own accountIds. People can call other people's contracts. _Contracts_ can call other people's contracts too! As far as NEAR is concerned, an `accountId` is and `accountId` is an `accountId`. Hopefully, that helps demystify the idea of cross-contract calls.
+<pre class="language-bash">
+  $ <span class="token function">near</span> call thanks.humanman.testnet say '{"message":"You are the BEST. TAKE MY MONEY!"}' --accountId YOUR_OWN_TESTNET_ACCOUNT.testnet  --amount $SO_MUCH_$$$$NEAR
+</pre>
 
-The next thing we want to do is add the rest of our methods. We have a `list` method, which allows the owner of the contract to list the messages they received. So, that lovely "Hello" message will be available to see by running a nifty view function. However, I need to make sure that I, and I alone, the _owner_ of the contract, am allowed to view my messages. That means we will need an owner check.  
+If you ran the call command from earlier as it is (with your own testnet account as `accountId`) then I would get a lovely message, and the contract would be working as intended. 
+
+Does that make sense? Contracts have their own accountIds. People have their own accountIds. People can call other people's contracts. _Contracts_ can call other people's contracts too! As far as NEAR is concerned, an `accountId` is and `accountId` is an `accountId`. That's what we call a _cross-contract-call_, but that's for another tutorial.
+
+The next thing we want to do is add the rest of our methods. We have a `list` method, which allows the owner of the contract to list the messages they received. So, that lovely complimentary message will be available to see by running a nifty _view_ function. However, I need to make sure that I, and I alone, the _owner_ of the contract, am allowed to view my messages. That means we will need an owner check. 
+
+That's where _Context_ comes to play. Paste the following method in `index.ts`:
+
+```typescript
+  export function list(): Array<Message> {
+    _assert_owner()
+    return messages.get_last(10)
+  }
+
+  function _assert_owner(): void {
+    const caller = Context.predecessor
+    assert(owner == caller, "Only the owner of this contract may call this method")
+  }
+```
+
+What is going on here?? 
+
+Well _Context_ has three major properties:
+
+1. signer - _account that signed the initial transaction._
+
+2. predecessor - _the last account who made the current contract call._
+
+3. current - _the account of the contract._
+
+
+So `_assert_owner()` checks that the last account to call this method is also the `owner` as defined in the `index.ts` file. 
+
+Secondly, the `messages.get_last(10)` spits out the last 10 messages from the  `Messages` instance. Listing any more will get you into "Gas Exceeded" territory.
+
+We can call our `list()` method like so:
+
+<pre class="language-bash">
+  $ <span class="token function">near</span> call dev-1622755101091-2932922 list '{}' --accountId ACCOUNT_THAT_MATCHES_OWNER_VARIABLE.testnet
+</pre>
+
+If you are calling `list()` and you're seeing that assertion error that `_assert_owner()` throws then check that `const owner` matches the `--acountId` you used to call it. If not, change it, rebuild the `wasm`, redeploy the contract, and try calling it again.
 
 Remember, any function we export in `assembly/index.ts` will be interpreted as a contract function when compiled to a `wasm`, and we can call it just like we did with `say`. It is perfectly fine to write your contracts this way, but did you see how clean some of those helper classes were? The simplicity and elegance of `Message` is quite inspired. Wouldn't if be cool to have a class for our contract so we can be hip to the singleton style all the kids are doing these days?  The answer is, Yes. Yes it would.
 
 ## Refactoring
 
 
-Refactoring contract functions into a singleton pattern isn't that hard, but there are a few things to keep in mind. AssemblyScript requires the `@nearBindgen` decorator on every class you write. Furthermore, every _call_ function requires its own decorator, `@mutateState()` on the line above it. 
+Refactoring contract functions into a singleton pattern isn't that hard, but there are a few things to keep in mind. _AssemblyScript_ requires the `@nearBindgen` decorator on every class you write. Furthermore, every _call_ function requires (or at least, used to require) its own decorator, `@mutateState()` on the line above it. 
 
-One last thing to remember, is that unlike the function pattern, the singleton style requires you to initialize the contract when you _first_ deploy or call it with a simple flag, `--initFunction new --initArgs '{}'` where `{}` contains the arguments your Class' constructor requires to instantiate if any. Just remember to remove the flag from subsequent deployments or you will get an error complaining that you already initialized it. 
+One last thing to remember, unlike the function pattern, the singleton style requires you to initialize the contract when you _first_ deploy or call it with a simple flag, `--initFunction new --initArgs '{}'` where `{}` contains the arguments your Class' constructor requires to instantiate, if any. Just remember to remove the flag from subsequent deployments or you will get an error complaining that you already initialized it. 
 
-Switch to the `refactoring/solution` branch, and take a few minutes to review the code. It should be complete with all necessary contract methods nicely put together in easy-to-read classes. Your constants have been moved to `utils.ts`. Your helper classes have been moved to `model.ts`, and other helper methods have been converted to private class methods. Pretty nifty, huh?
+Switch to the `refactoring/solution` branch, and take a few minutes to review the code. 
 
-If you want to refactor what we've done so far yourself then go nuts! You can work in the previously unmentioned branch, `functions/solution`, which looks like spaghetti, but will run. 
+It should be complete with all necessary contract methods nicely put together in easy-to-read classes. Your constants have been moved to `utils.ts`. Your helper classes have been moved to `model.ts`, and other helper methods have been converted to private class methods. Pretty nifty, huh?
+
+If you want to refactor what we've done so far yourself then go nuts! You can work in the branch, `functions/solution`, which looks like spaghetti, but will run. 
 
 Our smart contracts are singleton and ready to mingleton!
 
@@ -468,7 +513,11 @@ export class Contract {
 ```
 This is the first section of our `Contract` class. Our main call function, `say`, is now housed in the `Contract` class, and has its `@mutateState` decorator signifying what type of function it is.
 
-The constructor method on `Contract` takes two arguments in its constructor; `owner` and `allow_anonymous`. The `owner` argument allows you and only you, the person who deployed the contract to call your _view_ methods. The `allow_anonymous` argument sets permission on whether people sending you a message can do so anonymously.
+The constructor method on `Contract` takes two arguments: `owner` and `allow_anonymous`. 
+
+The `owner` argument allows you and only you, the person who deployed the contract to call your _view_ methods. 
+
+The `allow_anonymous` argument sets permission on whether people sending you a message can do so anonymously.
 
 One more interesting bit of code to look at is: 
 
@@ -476,11 +525,11 @@ One more interesting bit of code to look at is:
 assert(message.length > 0, "Message length cannot be 0")
 ```
 
-I love `assert`. It's so intuitive, and simply allows you to place guards with error messages wherever you want. It saves your lines of `if/else` statements to do the same job, and it seamlessly ties in to your unit tests. If you're not already using it, start today!
+I love `assert`. It's so intuitive, and simply allows you to place guards with error messages wherever you want. It saves you lines of `if/else` statements to do the same job, and it seamlessly ties in to your unit tests. If you're not already using it, start today!
 
 ## Testing
 
-Speaking of unit tests, let's write a few, and I encourage you to write some more. Use the `assert` methods as clues for what to write.
+Speaking of unit tests, let's write a few, and I encourage you to write some more of your own. Use the `assert` methods as clues for what to write.
 
 Navigate to `thanks/__tests__/index.unit.spec.ts` and paste the following in there:
 
@@ -541,7 +590,9 @@ describe('List Messages', () => {
  
 ```
 
-These are really simple tests that deal solely with the `say` call function. They are informed by its `assert` methods. Now run:
+These are really simple tests that are solely informed by various `assert` methods. 
+
+Now run:
 
 <pre class="language-bash">
   $ <span class="token function">yarn</span> test:unit
@@ -550,29 +601,33 @@ These are really simple tests that deal solely with the `say` call function. The
 If all goes well, you should see something like this:
 
 <pre class="language-bash">
-   [Describe]: Send Message
+    [Describe]: Send Message
   <br/>
-   <span style="color: green;">[Success]</span>: ✔ Throws AssertionError if string is empty
-   <span style="color: green;">[Success]</span>: ✔ Throws if message is too long
+    <span style="color: green;">[Success]</span>: ✔ Throws AssertionError if string is empty
+    <span style="color: green;">[Success]</span>: ✔ Throws if message is too long
+  <br/>
+    [Describe]: List Messages
+
+    <span style="color: green;">[Success]</span>:  ✔ Lists the last 10 messages
   <br/>
   [File]: src/thanks/__tests__/index.unit.spec.ts
-  [Groups]: <span style="color: green;">2 pass</span>, 2 total
+  [Groups]: <span style="color: green;">3 pass</span>, 3 total
   [Result]: <span style="color: green;">✔ PASS</span>
   [Snapshot]: 0 total, 0 added, 0 removed, 0 different
-  [Summary]: <span style="color: green;">2 pass</span>,  0 fail, 2 total
+  [Summary]: <span style="color: green;">3 pass</span>,  0 fail, 3 total
   [Time]: 7.091ms
   <br/>
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   <br/>
   [Result]: <span style="color: green;">✔ PASS</span>
   [Files]: 1 total
-  [Groups]: 2 count, 2 pass
-  [Tests]: 2 pass, 0 fail, 2 total
+  [Groups]: 3 count, 3 pass
+  [Tests]: 3 pass, 0 fail, 3 total
   [Time]: 12537.468ms
   ✨  Done in 13.02s.
 </pre>
 
-Unit Tests can be extremely simple, but they can come with a lot of frustration and confusion as you work with them. 
+Unit Tests can be a bit frustrating to work with at first, but they will quickly become very simple to set up.
 
 There are a few things to note about testing your contracts:
 
@@ -582,19 +637,26 @@ There are a few things to note about testing your contracts:
 2. Unit Tests have no concern with the dev account generated by the NEAR CLI <nobr><span class="code-emphasis inline-block">dev deploy</span></nobr> command, so ignore the `neardev/` folder while testing.
 <br/>
 
-3. Unit Tests ignore logging unless importing and using `log()`
+3. Unit Tests ignore logging unless using `log()`, which is a global `_as-pect_ function
 <br/>
 
-Caveats aside Unit Tests will save you loads of debugging time, and help you handle edge cases, so make sure you take some time to review the other contract methods, and write a few unit tests for them. 
+Caveats aside, Unit Tests will save you loads of debugging time, and help you handle edge cases, so make sure to use them.
 
-Unit Tests are handled by the `near-sdk-as` package, which has a powerful module, _VMContext_, to leverage info about your Smart Contract while testing. You can see it in use in the code above. You don't always need to use _VMContext_ , but if you have checks, like _Thanks_ does, on your functions, which check the owner of the contract, then _VMContext_ will be a real help. It has a bunch of methods allowing you to get the most out of your tests. <a href="https://github.com/near/near-sdk-as/blob/master/near-mock-vm/assembly/context.ts" target="_blank">Learn more about <em>VMContext</em></a>.
+Unit Tests use many of the modules provided by `near-sdk-as` package, including _VMContext_, to leverage info about your Smart Contract while testing. 
 
+You can see it in use in the code above. You don't always need to use _VMContext_ , but if you have checks, like _Thanks_ does, on your functions, which check the owner of the contract, then _VMContext_ will be a real help. It has a bunch of methods allowing you to get the most out of your tests. <a href="https://github.com/near/near-sdk-as/blob/master/near-mock-vm/assembly/context.ts" target="_blank">Learn more about <em>VMContext</em></a>.
 
-You may also run into some weird issues in the terminal. Make sure you haven't added any unnecessary dependencies. 
+<blockquote class="tip">
+<fa-icon class="mr-2" style="opacity: .7;" icon="lightbulb" size="sm"></fa-icon><strong>Troubleshooting Bash Errors</strong><br/>
+<hr/> 
 
-Also, you may have been tempted to run `npm audit fix` at some point during installation. Despite all the bright red, urgent warnings your terminal may have thrown at you, "fixing" the dependencies may prevent you from properly compiling your code, which will in turn prevent pretty much anything else you want to do with your program. 
+You run into some weird issues in the terminal when running tests. Make sure you haven't added any unnecessary dependencies. 
+
+Also, you may have been tempted to run `npm audit fix` at some point during installation. Despite all the bright, red, urgent warnings your terminal may have thrown at you, "fixing" the dependencies may prevent you from properly compiling your code, which will in turn prevent pretty much anything else you want to do with your program. 
 
 Bleeding edge technology like blockchain development is a bit of a double edge sword. It's exciting, and there's lots of opportunity to contribute, but the source code is constantly updating and improving. What was stable last week, may be outdated this week. So, stay up to date by [joining the community!](https://near.org/community/)
+
+</blockquote>
 
 ## Adding Scripts
 
@@ -613,17 +675,18 @@ Take a few minutes to read through `scripts/README.md`. It will lay out a cool d
 
 Amazing work! Hopefully, you know a little bit more about Smart Contracts like:
 
-<ul>
-  <li>The difference between a _call_ function and a _view_ function</li>
-  <li>Dependencies and libraries specific to NEAR and _AssemblyScript_</li>
-  <li>Setting up an account Id for your contract</li>
-  <li>Calling a contract method from the command line</li>
-  <li>Writing Smart Contracts as functions and as Classes</li>
-  <li>Unit testing your Smart Contract</li>
-  <li>Using scripts to run code</li>
-</ul>
+
+- The difference between a _call_ function and a _view_ function.
+- Dependencies and libraries specific to NEAR and _AssemblyScript_.
+- Setting up an account Id for your contract.
+- Calling a contract method from the command line.
+- Writing Smart Contracts as functions and as Classes.
+- Unit testing your Smart Contract.
+- Using scripts to run code.
+  
 <br/>
-You also have some new packages installed globally that you can use like NEAR CLI. Now you can write your own Smart Contracts, deploy them, and call them; all from the command line. 
+
+You also have some new packages installed globally that you can use like NEAR CLI. Now you can write your own Smart Contracts, deploy them, and call them; all from the command line! 
 
 ## What Next?
 
@@ -633,19 +696,23 @@ If you want to dive deeper into testing, head over to the [Near Docs](https://do
 
 <strong class="mt-8 mb-4 d-block">Adding a Front End</strong>
 
-We've built and tested a remarkable backend. If we were building an API, the Smart Contracts would be our methods to make requests to our api. More specifically, Smart Contracts operate like an ORM, but instead of communicating directly with a database (ORM), Smart Contracts communicate directly with the blockchain or, rather, the blockchain's own api called the RPC.
+We've built and tested a remarkable backend. If we were building an API, the Smart Contracts methods would be how we make requests to our api. 
+
+More specifically, Smart Contracts operate like an ORM, but instead of communicating directly with a database (ORM), Smart Contracts communicate directly with the blockchain, or rather, the blockchain's own api, called the RPC.
 
 If that's confusing, then let's back up a bit - we're done building our backend.
 
-But can Grandma open up her terminal and use it? No. Grandma thinks Bash is some sort of side dish with beans. In order for her to send us a message (and maybe a NEAR token or two!), we need to spin up a front end that calls the contract the same way we've been doing in the terminal.  
+But can Grandma open up her terminal and use it? No. Grandma thinks Bash is some sort of side dish with beans. 
 
-Take a moment to think about what this contract would look like. What would _any_ "thank you message" application _look_ like? We know that `say` requires a _message_, right? Maybe a form of some kind would fit the bill.
+In order for her to send us a message (and maybe a NEAR token or two!), we need to spin up a front end that calls the contract the same way we've been doing in the terminal.  
+
+Take a moment to think about what this contract would look like. What would _any_ "thank you message" application _look_ like? We know that `say` requires a _message_, right? Maybe a form of some kind would fit the bill. Et Voil&agrave; !
 
 Before using the form below, please make sure you have a _testnet_ account. You will be redirected to NEAR explorer for authorization.
 
 <contract-form></contract-form>
 
-Refer to the `contract-ui/` folder in this repo to see the code for the above form. See if you can transplant it into your local copy of `sample--thank` using Vue.
+Refer to the `contract-ui/` folder in this repo to see the code for the above form. See if you can transplant it into your local copy of `sample--thanks` using Vue.
 
 
 

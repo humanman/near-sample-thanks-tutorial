@@ -4,12 +4,12 @@
       <Header :menuToggle="sidebar" />
       <Sidebar v-if="sidebar" />
       <main class="main" :class="{'main--no-sidebar': !sidebar, 'main--sidebar-is-open' : this.$store.state.sidebarOpen}">
-        <!-- <highlightable
+        <highlightable
           @highlight="onHighlight"
           @dismiss="onDismiss"
-        > -->
+        >
           <slot/>
-        <!-- </highlightable> -->
+        </highlightable>
       </main>
     </div>
     <BaseTint v-if="showComment" @close="onDismiss">
