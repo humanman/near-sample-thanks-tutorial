@@ -13,7 +13,7 @@
 
         <v-switch
           v-model="isAnon"
-          :label="`Send Anonymously: ${isAnon.toString()}`"
+          :label="`Send Anonymously: ${isAnon}`"
         ></v-switch>
         <v-expand-transition>
           <v-text-field
@@ -55,6 +55,11 @@
         </div>
       </v-container>
     </v-form>
+    <v-expand-transition>
+      <div v-if="success" style="background: #40b883;" class="pa-4 mt-2">
+        <h4 class="text-center" style="color: #fff;">Message Sent Successfully</h4>
+      </div>
+    </v-expand-transition>
   </v-card>
 </template>
 
@@ -71,6 +76,7 @@
         config: null,
         wallet: null
       },
+      success: false,
       valid: true,
       contractName: '',
       contractNameRules: [
@@ -101,7 +107,7 @@
           this.near.config = nearConfig
           this.near.wallet = walletConnection
           this.contractName = this.near.config.contractName
-          this.senderName = this.near.currentUser.accountId
+          // this.senderName = this.near.currentUser.accountId
       })
     },
     methods: {
@@ -114,6 +120,7 @@
       },
       clear () {
         this.$refs.form.reset()
+        this.success = false
       },
       submitForm () {
         this.$refs.form.validate()
@@ -121,12 +128,18 @@
         if (isValid) {
           this.near.contract.say({
             message: this.message,
-            anonymous: (this.isAnon ? true: false)
+            anonymous: (this.isAnon ? true : false)
           },
           300000000000000,
           this.donation
           )
         }
+        this.success = true
+        const success = this.success
+        setTimeout(() => {
+          this.success = false
+          this.clear()
+        }, 3000);
 
       },
     }
